@@ -29,6 +29,19 @@ DONE
     python bin/send_email.py subject msg
    ```
 
+2. 数据库迁移
+    
+    为了存储将来可能会有的数据
+    
+    ```bash
+    # 初始化数据库
+    bin/db_init.sh
+    # 创建迁移脚本
+    bin/db_migrate.sh revision_msg
+    # upgrade 数据库
+    bin/db_upgrade.sh
+    ```
+
 TODO
 ===
 
