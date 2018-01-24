@@ -11,6 +11,13 @@ cd xraspberry
 pip install .
 ```
 
+设置以下环境变量：
+
+- `X_EMAIL_SERVER` (optional, default smtp.qq.com)
+- `X_EMAIL_USERNAME`
+- `X_EMAIL_PASSWORD`
+- `X_LOG_LEVEL` (optional, default DEBUG)
+
 Then have fun!
 
 DONE
@@ -31,7 +38,7 @@ DONE
 
 2. 数据库迁移
     
-    为了存储将来可能会有的数据
+    当前使用sqlite，为了存储将来可能会有的数据
     
     ```bash
     # 初始化数据库
