@@ -7,5 +7,6 @@ setup(name='xraspberry',
       packages=['xraspberry'],
       install_requires=[
             "fire",
+            "alembic"
       ],
       zip_safe=False)
