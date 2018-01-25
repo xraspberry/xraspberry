@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"xweb/conf"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 
 	if err := gracehttp.Serve(
 		&http.Server{
-			Addr:              fmt.Sprintf(":%d", 9000),
+			Addr:              fmt.Sprintf(":%d", conf.ServiceConfig.Port),
 			Handler:           ginIns,
 			ReadTimeout:       5 * time.Minute,
 			ReadHeaderTimeout: 5 * time.Minute,

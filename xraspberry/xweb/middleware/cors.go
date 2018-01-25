@@ -15,7 +15,7 @@ func CORS(router *gin.Engine) func(c *gin.Context) {
 	router.OPTIONS("/*cors", func(c *gin.Context) {
 		applyCors(c)
 	})
-	return func (c *gin.Context) {
+	return func(c *gin.Context) {
 		applyCors(c)
 	}
 }
