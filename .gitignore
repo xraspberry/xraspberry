@@ -102,3 +102,15 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+*.DS_Store
+*.swp
+*.swo
+*.ipynb
+*.jar
+.pid
+dump.rdb
+debug
+.vscode/
+logs/
+xweb
