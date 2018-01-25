@@ -9,7 +9,8 @@ import (
 )
 
 type ServiceConfigStruct struct {
-	Port int `yaml:port`
+	Port  int    `yaml:port`
+	DBUrl string `yaml:db_url`
 }
 
 var ServiceConfig = &ServiceConfigStruct{}
