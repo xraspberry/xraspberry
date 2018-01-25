@@ -49,11 +49,26 @@ DONE
     bin/db_upgrade.sh
     ```
 
+3. web系统 using golang
+    
+    ```bash
+    ln -sf raspberry/xraspberry/xweb to/your/go/path/src/xweb
+    cd xweb
+    go build
+    ./web
+    ```
+
 TODO
 ===
 
 1. 室内温度监测，邮件提醒和展示 - `[xtemperature]`
 2. 监控视频(晚上睡觉监测😂) - `[xvideo]`
 3. 每天进出门记录和提醒(兼有防盗功能) - `[xwelcome]`
-4. 展现上述数据的web系统 using golang - `[xweb]`
 
+xweb API
+===
+
+/
+---
+
+GET: Hello xraspberry
