@@ -1,0 +1,16 @@
+alembic==0.9.6
+astroid==1.6.0
+certifi==2017.11.5
+fire==0.1.2
+isort==4.2.15
+lazy-object-proxy==1.3.1
+Mako==1.0.7
+MarkupSafe==1.0
+mccabe==0.6.1
+pylint==1.8.1
+python-dateutil==2.6.1
+python-editor==1.0.3
+six==1.11.0
+SQLAlchemy==1.1.15
+wrapt==1.10.11
+xraspberry==0.0.1
