@@ -1,0 +1,13 @@
+#container {
+    margin-top: 200px;
+    margin-left: 500px;
+}
+
+#prefix {
+    font-weight: bold;
+    color: blue;
+}
+
+#time {
+    color: red;
+}
