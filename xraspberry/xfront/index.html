@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="./demo.css">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <title>X-Raspberry</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
 </head>
 <body>
 <div id="container">
@@ -27,6 +26,7 @@
     </form>
 </div>
 
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
             $.fn.serializeObject = function(){
                     var o = {};
@@ -50,14 +50,13 @@
                 url: "http://localhost:5000/api/v1/user/login",
                 data: JSON.stringify($('#form1').serializeObject()),
                 success: function (result) {
-                    console.log(result);//打印服务端返回的数据(调试用)
                     if (result.status == "ok") {
-                        alert("SUCCESS");
+                        window.location.href = "./html/user.html";
                     }
                     ;
                 },
                 error : function() {
-                    alert("异常！");
+                    alert("用户名密码验证失败！");
                 }
             });
         }
