@@ -10,12 +10,12 @@ get_config() {
     echo ${RESULT}
 }
 
-
 DATA_DIR=${PROJECT_ROOT}/data/pg_data
 USER=$(get_config "rasplife.postgresql.user")
 DB_NAME=$(get_config "rasplife.postgresql.db_name")
 PORT=$(get_config "rasplife.postgresql.port")
 DB_HOST=$(get_config "rasplife.postgresql.host")
+
 
 if [ -d /usr/lib/postgresql/9.4/bin ]; then
     export PATH=$PATH:/usr/lib/postgresql/9.4/bin
@@ -33,14 +33,4 @@ if [ -d /usr/local/pgsql/bin ]; then
     export PATH=$PATH:/usr/local/pgsql/bin
 fi
 
-#mkdir -p ${DATA_DIR}
-
-initdb -D ${DATA_DIR}
-pg_ctl -D ${DATA_DIR} -l ${DATA_DIR}/postgresql.log start -o "-p ${PORT}"
-echo "wait 2 seconds..."
-sleep 2
-# TODO check the process
-
-createuser -s ${USER} -h ${DB_HOST} -p ${PORT}
-
-echo "create database ${DB_NAME} encoding='utf-8' template=template0;" | psql -U ${USER} -h ${DB_HOST} -p ${PORT}
+pg_ctl start -D ${DATA_DIR} -o "-p ${PORT}" -l ${DATA_DIR}/postgresql.log

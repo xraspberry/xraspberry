@@ -1,0 +1,20 @@
+logging:
+  level: "debug"
+
+rasplife:
+  version: "0.0.1"
+  debug: False
+  http_port: 5000
+  auth_config:
+    app_id: "rasplife"
+    secret_key: "the-winter-is-coming"
+    token_expire: 300
+  postgresql:
+    host: "127.0.0.1"
+    port: 35332
+    user: "postgres"
+    password: ""
+    db_name: "rasplife"
+    check_interval: 60
+  sqlalchemy:
+    echo: True

@@ -1,32 +1,68 @@
 <!DOCTYPE html>
-
 <html lang="en">
-    <head>
-        <title>实时报时</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="./demo.css">
-        <script src="./demo.js"></script>
-    </head>
-    <body>
-        <div id="container">
-            <button onclick="start_time()" id="start">开始</button>
-            <p id="prefix">当前时间: </p><p id="time"></p>
-        </div>
-    </body>
-    <script type="text/javascript">
-        var refresh_id = 0;
-        function start_time() {
-            refresh_time();
-            var button = document.getElementById("start")
-            if (button.textContent == "开始") {
-                // setInterval() 方法可按照指定的周期（以毫秒计）来调用函数或计算表达式
-                // setInterval() 方法会不停地调用函数，直到 clearInterval() 被调用或窗口被关闭。
-                refresh_id = setInterval("refresh_time()", 1000);
-                button.textContent = "停止";
-            }else{
-                button.textContent = "开始";
-                clearInterval(refresh_id);
-            }
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="./demo.css">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+<div id="container">
+    <form id="form1" onsubmit="return false" action="##" method="post">
+        <header>用户登录</header>
+        <nav>
+            <div id="username">
+                <input type="text" placeholder="用户名" name="username">
+            </div>
+            <div id="pwd">
+                <input type="password" placeholder="密码" name="password">
+            </div>
+            <div class="remember">
+                <input type="checkbox" class="checkIcon">记住密码
+            </div>
+        </nav>
+        <footer>
+            <input type="submit" id="loginBtn" value="登录" onclick="login()">
+        </footer>
+    </form>
+</div>
+
+<script type="text/javascript">
+            $.fn.serializeObject = function(){
+                    var o = {};
+                    var a = this.serializeArray();
+                    $.each(a, function() {
+                        if (o[this.name] !== undefined) {
+                            if (!o[this.name].push) {
+                                o[this.name] = [o[this.name]];
+                            }
+                            o[this.name].push(this.value || '');
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+                    return o;
+                };
+        function login() {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "http://localhost:5000/api/v1/user/login",
+                data: JSON.stringify($('#form1').serializeObject()),
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据(调试用)
+                    if (result.status == "ok") {
+                        alert("SUCCESS");
+                    }
+                    ;
+                },
+                error : function() {
+                    alert("异常！");
+                }
+            });
         }
-    </script>
+
+</script>
+
+</body>
 </html>

@@ -72,3 +72,9 @@ xweb API
 ---
 
 GET: Hello xraspberry
+
+Golang安装和配置
+===
+
+- [下载地址](https://golang.org/dl/)
+- [安装教程](https://golang.org/doc/install)

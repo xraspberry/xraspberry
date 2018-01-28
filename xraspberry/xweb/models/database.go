@@ -5,6 +5,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"
 	"os"
+	"time"
 	"xweb/conf"
 )
 
@@ -18,4 +19,11 @@ func initDB() *gorm.DB {
 	}
 	db.LogMode(true)
 	return db
+}
+
+type BaseModel struct {
+	ID        int        `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"-"`
 }
