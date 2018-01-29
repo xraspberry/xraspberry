@@ -24,7 +24,8 @@ class Application(tornado.web.Application):
             'static_path': config.path('xraspberry/rasplife/static'),
             'serve_traceback': True,
             'xsrf_cookies': False,
-            "cookie_secret": "rasplifenice",
+            "cookie_secret": "rasplife-is-nice",
+            "login_url": "/api/v1/user/login"
         }
         tornado.web.Application.__init__(self, handlers, debug=config.get_config("rasplife.debug", True), **settings)
 

@@ -20,13 +20,13 @@ class UserLoginHandler(BaseHandler):
         authed = user.check_password(password)
         if not authed:
             return self.error("Bad password", status_code=403)
-        self.set_secure_cookie("user_id", str(user.id))
+        self.set_secure_cookie("user_id", str(user.id), httponly=True)
         self.data({})
 
     def get(self, *args, **kwargs):
         key = self.get_argument("key")
         if key == config.get_config("rasplife.auth_config.secret_key"):
-            self.set_secure_cookie("user_id", str(0))
+            self.set_secure_cookie("user_id", str(0), httponly=True)
             self.data({})
         else:
             return self.error(MESSAGES[403], status_code=403)
@@ -55,6 +55,8 @@ class UserInfoHandler(BaseHandler):
                     return self.error(MESSAGES[404], status_code=404)
                 else:
                     return self.data(query_user.to_dict())
+            else:
+                return self.error(MESSAGES[403], status_code=403)
         else:
             self.data(self.current_user.to_dict())
 
