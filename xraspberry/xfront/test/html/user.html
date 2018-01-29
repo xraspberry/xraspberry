@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>X-Raspberry: User Profile</title>
+  <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+<body>
+<div id="headerBox">
+  <header>
+    <div>Roster</div>
+    <div class="userBox">
+      <span class="branch"><%= $ou %></span>
+      <span class="user"><%= $cn %></span>
+      <a href="/user/home" class="goList">首页</a>
+      <a href="/user/logout" class="logoutBtn">退出</a>
+    </div>
+  </header>
+</div>
+<div id="container">
+  <form action="/user/profile" method="post">
+    <div class="infoBox">
+      <ul class="userTitle">
+        <li>ID</li>
+        <li>部门</li>
+        <li>姓</li>
+        <li>名</li>
+        <li class="keyTitle">Public SSH Key</li>
+        <li>原密码</li>
+        <li>新密码</li>
+        <li>确认密码</li>
+      </ul>
+      <ul class="userInfo">
+        <li id="uid"><%= $cn %></li>
+        <li id="department"><%= $ou %></li>
+        <input name="dn" type="hidden" value="<%= $dn %>">
+        <li>
+          <input id="familyName" type="text" placeholder="请输入姓" name="sn" value="<%= $sn %>">
+        </li>
+        <li>
+          <input id="name" type="text" placeholder="请输入名" name="gn" value="<%= $gn %>">
+        </li>
+        <li id="keyCont">
+          <textarea name="sshPublicKey"><%= $sshPublicKey %></textarea>
+        </li>
+        <li>
+          <input id="oldPassword" name="oldPassword" type="password" placeholder="不修改密码请勿填写">
+        </li>
+        <li>
+          <input id="userPassword" name="userPassword" type="password" placeholder="不修改密码请勿填写">
+        </li>
+        <li>
+          <input id="confirmUserPassword" name="confirmUserPassword" type="password" placeholder="不修改密码请勿填写">
+        </li>
+      </ul>
+    </div>
+    <div id="submitBtn"><input type="submit" value="保存"></div>
+  </form>
+</div>
+</body>
+</html>

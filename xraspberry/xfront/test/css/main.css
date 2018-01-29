@@ -1,0 +1,264 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+body {
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+    background: #f1f1f2;
+    position: absolute;
+}
+
+html {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#container {
+    width: 1000px;
+    height: auto;
+    background: #ffffff;
+    margin: 50px auto;
+    border: 1px solid #c1c5ca;
+    color: #505050;
+}
+
+#container input {
+    width: 270px;
+    border: 1px solid #87a6c7;
+    border-radius: 3px;
+    line-height: 34px;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+#container .infoBox {
+    margin: 50px 100px 15px 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #cac9c9;
+}
+
+#container .userTitle {
+    width: 28%;
+    height: 100%;
+    font-weight: bold;;
+}
+
+#container .userTitle li, #container .userInfo li {
+    width: 100%;
+    line-height: 50px;
+    padding-left: 4%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #cac9c9;
+}
+
+#container .userTitle li:nth-child(odd) {
+    background: #d6e6f5;
+}
+
+#container .userTitle li:nth-child(even) {
+    background: #edf1f4;
+}
+
+#container .userInfo {
+    width: 72%;
+    height: 100%;
+}
+
+#container .errorTip, #container .successTip {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+}
+
+#container .successTip {
+    color: #49bd24;
+}
+
+#keyCont, .keyTitle {
+    height: 180px;
+}
+
+#keyCont textarea {
+    width: 526px;
+    height: 150px;
+    margin: 15px 0;
+    resize: none;
+}
+
+#submitBtn {
+    margin: 12px 0 36px 434px;
+    height: auto;
+}
+
+#submitBtn input {
+    width: 120px;
+    font-size: 16px;
+    line-height: 34px;
+    background: #2570c1;
+    border-radius: 5px;
+    text-align: center;
+    color: #ffffff;
+}
+
+#headerBox {
+    width: 100%;
+    height: 60px;
+    background: #1c4f86;
+}
+
+header {
+    width: 1000px;
+    height: 100%;
+    margin: 0 auto;
+    color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .userBox {
+    margin-right: 30px;
+}
+
+header .userBox a {
+    color: #ffffff;
+}
+
+header .logoutBtn:hover, header .userBox .userInfo:hover, header .userBox .goList:hover {
+    color: #1bcee2;
+    cursor: pointer;
+}
+
+header .userBox .logoutBtn, header .userBox .userInfo, header .userBox .goList {
+    margin-left: 20px;
+}
+
+header .userBox .goList, header .userBox .userInfo {
+    width: 64px;
+    display: inline-block;
+    text-align: center;
+}
+
+#sectionBox {
+    width: 100%;
+    height: auto;
+    background: #f1f1f2;
+    overflow: hidden;
+}
+
+section {
+    width: 1000px;
+    background: #ffffff;
+    height: 100%;
+    margin: 50px auto;
+}
+
+section .listTitle, section .listCont ul {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ededed;
+}
+
+section .listTitle {
+    height: auto;
+    background: #656464;
+    color: #ffffff;
+}
+
+section .listTitle div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12px;
+}
+
+section .listTitle div:nth-child(1) {
+    width: 40%;
+}
+
+section .listTitle div:nth-child(2) {
+    width: 48%;
+}
+
+section .listTitle div:nth-child(3) {
+    width: 12%;
+}
+
+section .listCont ul:nth-child(odd) {
+    background: #d8d7d7;
+}
+
+section .listCont ul:nth-child(even) {
+    background: #e2e0e0;
+}
+
+section .listCont ul li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #464444;
+    padding: 12px;
+    word-break: break-all;
+}
+
+section .listCont ul li:nth-child(1) {
+    width: 40%;
+}
+
+section .listCont ul li:nth-child(2) {
+    width: 48%;
+}
+
+section .listCont ul li:nth-child(3) {
+    width: 12%;
+}
+
+section .listCont .goBtn a {
+    color: #00b4fb;
+    cursor: pointer;
+}
+
+section .noRight, #errorInfo {
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+    background: #d4d4d4;
+    color: #464444;
+}
+
+#errorInfo {
+    margin: 200px auto;
+    background: none;
+    text-align: left;
+}
+
+#errorInfo h1 {
+    width: 1000px;
+    box-sizing: border-box;
+    line-height: 26px;
+    margin: 4px auto;
+    font-size: 16px;
+    font-weight: normal;
+    background: #d4d4d4;
+    border: 1px solid #a9a9a9;
+    padding: 14px;
+}

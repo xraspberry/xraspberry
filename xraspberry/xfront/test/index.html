@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>X-Raspberry</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+</head>
+<body>
+<div id="container">
+    <form id="form1" onsubmit="return false" action="##" method="post">
+        <header>用户登录</header>
+        <nav>
+            <div id="username">
+                <input type="text" placeholder="用户名" name="username">
+            </div>
+            <div id="pwd">
+                <input type="password" placeholder="密码" name="password">
+            </div>
+            <div class="remember">
+                <input type="checkbox" class="checkIcon">记住密码
+            </div>
+        </nav>
+        <footer>
+            <input type="submit" id="loginBtn" value="登录" onclick="login()">
+        </footer>
+    </form>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+            $.fn.serializeObject = function(){
+                    var o = {};
+                    var a = this.serializeArray();
+                    $.each(a, function() {
+                        if (o[this.name] !== undefined) {
+                            if (!o[this.name].push) {
+                                o[this.name] = [o[this.name]];
+                            }
+                            o[this.name].push(this.value || '');
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+                    return o;
+                };
+        function login() {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "http://localhost:5000/api/v1/user/login",
+                data: JSON.stringify($('#form1').serializeObject()),
+                success: function (result) {
+                    if (result.status == "ok") {
+                        window.location.href = "http://localhost:5000/api/v1/users";
+                    }
+                    ;
+                },
+                error : function() {
+                    alert("用户名密码验证失败！");
+                }
+            });
+        }
+
+</script>
+
+</body>
+</html>
