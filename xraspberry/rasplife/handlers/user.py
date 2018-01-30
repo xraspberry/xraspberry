@@ -15,7 +15,7 @@ class UserLoginHandler(BaseHandler):
         username = data.get("username")
         password = data.get("password")
         user = User.find_by_name(username)
-        if user is None or user.deleted_at is not None:
+        if user is None or user.deleted_at != 0:
             return self.error("Bad username", status_code=403)
         authed = user.check_password(password)
         if not authed:

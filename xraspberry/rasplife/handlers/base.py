@@ -33,7 +33,7 @@ class route(object):  # pylint: disable=invalid-name
 
     @classmethod
     def get_handlers(cls):
-        handlers = ["user"]
+        handlers = ["user", "post"]
         for handler in handlers:
             importlib.import_module("xraspberry.rasplife.handlers.{}".format(handler))
         return cls.HANDLERS
@@ -44,7 +44,7 @@ class UserAuth(object):
         self.group = group
 
     def auth_check(self, this):
-        if this.current_user is None or this.current_user.deleted_at is not None:
+        if this.current_user is None or this.current_user.deleted_at != 0:
             return False
         else:
             if self.group == "current":
@@ -121,8 +121,8 @@ class BaseHandler(tornado.web.RequestHandler):
         uid = int(uid_in_cookie)
         if uid > 0:
             self.user_data = User.find_by_id(uid)
-        else:
-            self.user_data = User(id=0, username="dummy", role=User.ADMIN)
+        elif uid == 0:
+            self.user_data = User(id=0, username="dummy", role=User.ADMIN, deleted_at=0)
         return self.user_data
 
     def get_json_body(self):

@@ -13,32 +13,32 @@ class Post(BaseModel):
     user_id = Column(Integer, ForeignKey("user.id"))
     title = Column(String)
     content = Column(String)
-    update_count = Column(Integer)
-    read_count = Column(Integer)
+    update_count = Column(Integer, default=1)
+    read_count = Column(Integer, default=0)
     created_at = Column(Integer, default=generate_timestamp)
     updated_at = Column(Integer, default=generate_timestamp, onupdate=generate_timestamp)
-    deleted_at = Column(Integer, default=None)
+    deleted_at = Column(Integer, default=0)
 
     user = relationship("User", back_populates="posts", lazy="subquery")
 
     @classmethod
     def get_posts_by_user(cls, user_id, limit=20, offset=0, is_admin=False):
         if not is_admin:
-            cond = (cls.deleted_at is None)
+            cond = (cls.deleted_at == 0) & (cls.user_id == user_id)
         else:
-            cond = ()
-        total = db_session.query(func.count(cls)).filter(cond & (user_id == user_id))
-        items = db_session.query(cls).filter(cond & (user_id == user_id)).offset(offset).limit(limit).all()
+            cond = cls.user_id == user_id
+        total = db_session.query(func.count(cls.id)).filter(cond).scalar()
+        items = db_session.query(cls).filter(cond).order_by(cls.id).offset(offset).limit(limit).all()
         return total, items
 
     @classmethod
     def get_posts(cls, limit=20, offset=0, is_admin=False):
         if not is_admin:
-            cond = (cls.deleted_at is None)
+            cond = cls.deleted_at == 0
         else:
-            cond = ()
-        total = db_session.query(func.count(cls)).filter(cond)
-        items = db_session.query(cls).filter(cond).offset(offset).limit(limit).all()
+            cond = True
+        total = db_session.query(func.count(cls.id)).filter(cond).scalar()
+        items = db_session.query(cls).filter(cond).order_by(cls.id).offset(offset).limit(limit).all()
         return total, items
 
     @classmethod

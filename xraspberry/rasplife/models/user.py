@@ -22,7 +22,7 @@ class User(BaseModel):
     role = Column(Integer)
     created_at = Column(Integer, default=generate_timestamp)
     updated_at = Column(Integer, default=generate_timestamp, onupdate=generate_timestamp)
-    deleted_at = Column(Integer, default=None)
+    deleted_at = Column(Integer, default=0)
 
     posts = relationship("Post", back_populates="user", lazy="select")
     # role
@@ -55,7 +55,7 @@ class User(BaseModel):
 
     @classmethod
     def get_users(cls, limit=20, offset=0):
-        return db_session.query(cls).offset(offset).limit(limit).all()
+        return db_session.query(cls).offset(offset).order_by(cls.id).limit(limit).all()
 
     def to_dict(self):
         return {

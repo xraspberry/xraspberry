@@ -31,7 +31,7 @@ def upgrade():
         sa.Column('role', sa.Integer),
         sa.Column('created_at', sa.Integer, server_default=sa.text('extract(epoch from now())::int')),
         sa.Column('updated_at', sa.Integer, server_default=sa.text('extract(epoch from now())::int')),
-        sa.Column('deleted_at', sa.Integer)
+        sa.Column('deleted_at', sa.Integer, server_default=sa.text('0'))
     )
 
     op.create_index('idx_user_username', 'user', ['username'], unique=True)

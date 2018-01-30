@@ -7,6 +7,21 @@ from xraspberry.rasplife.db import db_session
 @route(r'/posts')
 class PostsHandler(BaseHandler):
     @current_auth
+    def post(self, *args, **kwargs):
+        data = self.get_json_body()
+        title = data.get("title")
+        content = data.get("content")
+        if not title or not content:
+            return self.error(MESSAGES[400], status_code=400)
+        post = Post()
+        post.user_id = self.current_user.id
+        post.title = title
+        post.content = content
+        db_session.add(post)
+        db_session.commit()
+        return self.data(post.to_dict())
+
+    @current_auth
     def get(self, *args, **kwargs):
         try:
             page = int(self.get_argument("page", 1))
@@ -19,7 +34,7 @@ class PostsHandler(BaseHandler):
 
         ret = {
             "total": total,
-            "items": items,
+            "items": [item.to_dict() for item in items],
             "page": page,
             "size": size
         }
@@ -48,7 +63,7 @@ class UserPostHandler(BaseHandler):
 
         ret = {
             "total": total,
-            "items": items,
+            "items": [item.to_dict() for item in items],
             "page": page,
             "size": size
         }
@@ -61,11 +76,14 @@ class PostHandler(BaseHandler):
     @current_auth
     def get(self, post_id, *args, **kwargs):
         post = Post.find_post_by_id(post_id)
+        if post.deleted_at != 0 and not self.is_admin():
+            return self.error(MESSAGES[403], status_code=403)
         if not user_visit_auth.visit_auth_check(self, post.user.id):
             return self.error(MESSAGES[403], status_code=403)
         if not post:
             return self.error(MESSAGES[404], status_code=404)
         db_session.execute("UPDATE post SET read_count = read_count + 1 WHERE id = :post_id;", {"post_id": post_id})
+        db_session.commit()
         return self.data(post.to_dict())
 
     @current_auth
