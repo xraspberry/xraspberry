@@ -33,7 +33,7 @@ class route(object):  # pylint: disable=invalid-name
 
     @classmethod
     def get_handlers(cls):
-        handlers = ["user", "post"]
+        handlers = ["user", "post", "todo"]
         for handler in handlers:
             importlib.import_module("xraspberry.rasplife.handlers.{}".format(handler))
         return cls.HANDLERS
@@ -71,17 +71,14 @@ class UserVisitAuth(object):
 
     def visit_auth_check(self, this, user_id):
         if this.current_user.id != user_id:
-            admin_user = db_session.query(User).filter_by(role=User.ADMIN).first()
-            if user_id == admin_user.id:
-                return True
-            elif this.is_admin():
-                return True
+            user = User.find_by_id(user_id)
+            if not user:
+                return False
+            elif user.deleted_at != 0 and not this.is_admin():
+                # 用户已经删除，只有管理员可以查看
+                return False
             else:
-                user = User.find_by_id(user_id)
-                if user and user.deleted_at:
-                    return False
-                else:
-                    return True
+                return True
         else:
             return True
 

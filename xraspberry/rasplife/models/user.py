@@ -25,6 +25,8 @@ class User(BaseModel):
     deleted_at = Column(Integer, default=0)
 
     posts = relationship("Post", back_populates="user", lazy="select")
+    todos = relationship("Todo", back_populates="user", lazy="select")
+
     # role
     ROLE = {
         3: "older",
@@ -75,5 +77,11 @@ class User(BaseModel):
 
     @classmethod
     def delete_user(cls, user_id):
+        """
+        删除一个用户需要删除其 posts, todos, todo_items
+        都是软删除，即将deleted_at置为当前时间戳
+        :param user_id:
+        :return:
+        """
         pass
 

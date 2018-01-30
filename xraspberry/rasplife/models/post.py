@@ -24,6 +24,7 @@ class Post(BaseModel):
     @classmethod
     def get_posts_by_user(cls, user_id, limit=20, offset=0, is_admin=False):
         if not is_admin:
+            # 非管理员只能查看未删除的数据
             cond = (cls.deleted_at == 0) & (cls.user_id == user_id)
         else:
             cond = cls.user_id == user_id

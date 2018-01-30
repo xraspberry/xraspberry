@@ -1,5 +1,5 @@
 from xraspberry.rasplife.utils import generate_timestamp
-from xraspberry.rasplife.handlers.base import route, BaseHandler, current_auth, admin_auth, user_auth, MESSAGES, user_visit_auth
+from xraspberry.rasplife.handlers.base import route, BaseHandler, current_auth, admin_auth, MESSAGES, user_visit_auth
 from xraspberry.rasplife.models.post import Post
 from xraspberry.rasplife.db import db_session
 
@@ -31,35 +31,6 @@ class PostsHandler(BaseHandler):
 
         offset = (page - 1) * size
         total, items = Post.get_posts(limit=size, offset=offset, is_admin=self.is_admin())
-
-        ret = {
-            "total": total,
-            "items": [item.to_dict() for item in items],
-            "page": page,
-            "size": size
-        }
-
-        self.data(ret)
-
-
-@route(r'/posts/user/(\d+)')
-class UserPostHandler(BaseHandler):
-    """
-    获取某个用户下的博文列表，可以将user_id作为/posts接口的查询参数
-    但是为了更好的权限控制：普通用户不能查看已经删除用户的博文列表
-    所以单独做一个接口
-    """
-    @user_visit_auth
-    @current_auth
-    def get(self, user_id, *args, **kwargs):
-        try:
-            page = int(self.get_argument("page", 1))
-            size = int(self.get_argument("size", 20))
-        except ValueError as e:
-            self.error(MESSAGES[400], status_code=400)
-
-        offset = (page - 1) * size
-        total, items = Post.get_posts_by_user(user_id, limit=size, offset=offset, is_admin=self.is_admin())
 
         ret = {
             "total": total,
