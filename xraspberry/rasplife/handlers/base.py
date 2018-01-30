@@ -44,21 +44,15 @@ class UserAuth(object):
         self.group = group
 
     def auth_check(self, this):
-        if this.current_user is None:
+        if this.current_user is None or this.current_user.deleted_at is not None:
             return False
         else:
-            flag = True
-            if self.group == "user":
-                pass
-            elif self.group == "current":
-                if not this.is_admin():
-                    flag = False
+            if self.group == "current":
+                return this.is_current()
             elif self.group == "admin":
-                if not this.is_admin():
-                    flag = False
+                return this.is_admin()
             else:
-                flag = False
-            return flag
+                return False
 
     def __call__(self, method):
         @functools.wraps(method)
@@ -70,9 +64,41 @@ class UserAuth(object):
         return wrapper
 
 
+class UserVisitAuth(object):
+    """
+    非管理员只可以查询管理员信息和目前系统未删除用户的信息，不能查询其他已经删除的用户的信息
+    """
+
+    def visit_auth_check(self, this, user_id):
+        if this.current_user.id != user_id:
+            admin_user = db_session.query(User).filter_by(role=User.ADMIN).first()
+            if user_id == admin_user.id:
+                return True
+            elif this.is_admin():
+                return True
+            else:
+                user = User.find_by_id(user_id)
+                if user and user.deleted_at:
+                    return False
+                else:
+                    return True
+        else:
+            return True
+
+    def __call__(self, method):
+        @functools.wraps(method)
+        def wrapper(this, user_id, *args, **kwargs):
+            if not self.visit_auth_check(this, user_id):
+                raise tornado.web.HTTPError(403)
+            return method(this, user_id, *args, **kwargs)
+
+        return wrapper
+
+
 user_auth = UserAuth("user")
 current_auth = UserAuth("current")
 admin_auth = UserAuth("admin")
+user_visit_auth = UserVisitAuth()
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -113,6 +139,8 @@ class BaseHandler(tornado.web.RequestHandler):
         return model
 
     def is_current(self):
+        if self.is_admin():
+            return True
         return self.current_user.role == User.CURRENT
 
     def is_admin(self):

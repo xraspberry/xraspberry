@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 
 msg=$1
-path=$2
 
-if [ -z "$msg" ]; then
-    echo "lack revision msg. Exiting..."
-    exit 1
-fi
+BIN_DIR=$(dirname $0)
+PROJECT_ROOT=$(perl -mCwd -e "print Cwd::abs_path('$BIN_DIR/..')")
 
-if [ -z "$path" ]; then
-    path=~/xraspberry.db
-fi
+get_config() {
+    cd ${PROJECT_ROOT} >/dev/null 2>&1
+    RESULT=$(python -c "from xraspberry.config import get_config; print(get_config('$1') or \"\")" 2>/dev/null)
+    cd - >/dev/null 2>&1
+    echo ${RESULT}
+}
 
-alembic -c misc/db-migrations/alembic.ini -x dburl=$path revision -m "$msg"
+
+USER=$(get_config "rasplife.postgresql.user")
+DB_NAME=$(get_config "rasplife.postgresql.db_name")
+PORT=$(get_config "rasplife.postgresql.port")
+DB_HOST=$(get_config "rasplife.postgresql.host")
+
+alembic -c misc/db-migrations/alembic.ini -n rasplife -x dburl=postgresql+psycopg2://${USER}@${DB_HOST}:${PORT}/${DB_NAME} revision -m "$msg"

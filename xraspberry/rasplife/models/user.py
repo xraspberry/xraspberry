@@ -1,5 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy.types import String, Integer, DateTime, ARRAY
+from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from xraspberry.rasplife.db import BaseModel, db_session
@@ -23,6 +24,7 @@ class User(BaseModel):
     updated_at = Column(Integer, default=generate_timestamp, onupdate=generate_timestamp)
     deleted_at = Column(Integer, default=None)
 
+    posts = relationship("Post", back_populates="user", lazy="select")
     # role
     ROLE = {
         3: "older",
@@ -52,8 +54,8 @@ class User(BaseModel):
         return db_session.query(cls).filter_by(username=username).first()
 
     @classmethod
-    def get_users(cls):
-        return db_session.query(cls).all()
+    def get_users(cls, limit=20, offset=0):
+        return db_session.query(cls).offset(offset).limit(limit).all()
 
     def to_dict(self):
         return {
@@ -70,4 +72,8 @@ class User(BaseModel):
             "updated_at": self.updated_at,
             "deleted_at": self.deleted_at
         }
+
+    @classmethod
+    def delete_user(cls, user_id):
+        pass
 
