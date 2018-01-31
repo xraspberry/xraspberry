@@ -139,11 +139,16 @@ class UserPostsHandler(BaseHandler):
         try:
             page = int(self.get_argument("page", 1))
             size = int(self.get_argument("size", 20))
+            post_type = int(self.get_argument("post_type", 0))
         except ValueError as e:
-            self.error(MESSAGES[400], status_code=400)
+            return self.error(MESSAGES[400], status_code=400)
+
+        if post_type == Post.DIARY and self.current_user.id != user_id:
+            return self.error(MESSAGES[403], status_code=403)
 
         offset = (page - 1) * size
-        total, items = Post.get_posts_by_user(user_id, limit=size, offset=offset, is_admin=self.is_admin())
+        total, items = Post.get_posts_by_user(current_user=self.current_user, post_type=post_type,
+                                              user_id=user_id, limit=size, offset=offset)
 
         ret = {
             "total": total,

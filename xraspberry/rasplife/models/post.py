@@ -13,6 +13,7 @@ class Post(BaseModel):
     user_id = Column(Integer, ForeignKey("user.id"))
     title = Column(String)
     content = Column(String)
+    post_type = Column(Integer, default=0)
     update_count = Column(Integer, default=1)
     read_count = Column(Integer, default=0)
     created_at = Column(Integer, default=generate_timestamp)
@@ -21,23 +22,28 @@ class Post(BaseModel):
 
     user = relationship("User", back_populates="posts", lazy="subquery")
 
+    POST = 0
+    MICRO_BLOG = 1
+    DIARY = 2
+
     @classmethod
-    def get_posts_by_user(cls, user_id, limit=20, offset=0, is_admin=False):
-        if not is_admin:
-            # 非管理员只能查看未删除的数据
-            cond = (cls.deleted_at == 0) & (cls.user_id == user_id)
+    def get_posts_by_user(cls, current_user, user_id, limit=20, offset=0, post_type=0):
+        if not current_user.is_admin():
+            cond = (cls.deleted_at == 0) & (cls.post_type == post_type) & (cls.user_id == user_id)
         else:
-            cond = cls.user_id == user_id
+            cond = (cls.post_type == post_type) & (cls.user_id == user_id)
         total = db_session.query(func.count(cls.id)).filter(cond).scalar()
         items = db_session.query(cls).filter(cond).order_by(cls.id).offset(offset).limit(limit).all()
         return total, items
 
     @classmethod
-    def get_posts(cls, limit=20, offset=0, is_admin=False):
-        if not is_admin:
-            cond = cls.deleted_at == 0
+    def get_posts(cls, user, limit=20, offset=0, post_type=0):
+        if not user.is_admin():
+            cond = (cls.deleted_at == 0) & (cls.post_type == post_type)
         else:
-            cond = True
+            cond = cls.post_type == post_type
+        if post_type == cls.DIARY:
+            cond &= (cls.user_id == user.id)
         total = db_session.query(func.count(cls.id)).filter(cond).scalar()
         items = db_session.query(cls).filter(cond).order_by(cls.id).offset(offset).limit(limit).all()
         return total, items

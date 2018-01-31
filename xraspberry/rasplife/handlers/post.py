@@ -11,12 +11,14 @@ class PostsHandler(BaseHandler):
         data = self.get_json_body()
         title = data.get("title")
         content = data.get("content")
+        post_type = data.get("post_type", Post.POST)
         if not title or not content:
             return self.error(MESSAGES[400], status_code=400)
         post = Post()
         post.user_id = self.current_user.id
         post.title = title
         post.content = content
+        post.post_type = post_type
         db_session.add(post)
         db_session.commit()
         return self.data(post.to_dict())
@@ -26,11 +28,12 @@ class PostsHandler(BaseHandler):
         try:
             page = int(self.get_argument("page", 1))
             size = int(self.get_argument("size", 20))
+            post_type = int(self.get_argument("post_type", Post.POST))
         except ValueError as e:
             self.error(MESSAGES[400], status_code=400)
 
         offset = (page - 1) * size
-        total, items = Post.get_posts(limit=size, offset=offset, is_admin=self.is_admin())
+        total, items = Post.get_posts(limit=size, offset=offset, user=self.current_user, post_type=post_type)
 
         ret = {
             "total": total,
@@ -53,6 +56,8 @@ class PostHandler(BaseHandler):
             return self.error(MESSAGES[403], status_code=403)
         if not post:
             return self.error(MESSAGES[404], status_code=404)
+        if post.post_type == Post.DIARY and post.user_id != self.current_user.id:
+            return self.error(MESSAGES[403], status_code=403)
         db_session.execute("UPDATE post SET read_count = read_count + 1 WHERE id = :post_id;", {"post_id": post_id})
         db_session.commit()
         return self.data(post.to_dict())

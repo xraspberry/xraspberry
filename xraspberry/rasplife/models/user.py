@@ -41,6 +41,9 @@ class User(BaseModel):
     MALE = 0
     FEMALE = 1
 
+    def is_admin(self):
+        return self.role == self.ADMIN
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
