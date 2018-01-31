@@ -25,9 +25,18 @@ class Todo(BaseModel):
             cond = (cls.deleted_at == 0) & (cls.user_id == user_id)
         else:
             cond = cls.user_id == user_id
-        total = db_session.query(func.count(cls)).filter(cond).scalar()
+        total = db_session.query(func.count(cls.id)).filter(cond).scalar()
         items = db_session.query(cls).filter(cond).order_by(cls.date).offset(offset).limit(limit).all()
+        items = [item.to_dict() for item in items]
+        # 非管理员无法查看到已经删除的todo_item子项
+        if not is_admin:
+            for todo in items:
+                todo['todo_items'] = [todo_item for todo_item in todo['todo_items'] if todo_item.deleted_at == 0]
         return total, items
+
+    @classmethod
+    def get_todo_by_id(cls, todo_id):
+        return db_session.query(cls).filter(cls.id == todo_id).first()
 
     def to_dict(self):
         return {
@@ -66,3 +75,7 @@ class TodoItem(BaseModel):
             "updated_at": self.updated_at,
             "deleted_at": self.deleted_at,
         }
+
+    @classmethod
+    def get_todo_item_by_id(cls, todo_item_id):
+        return db_session.query(cls).filter(cls.id == todo_item_id).first()

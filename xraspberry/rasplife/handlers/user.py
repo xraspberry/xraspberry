@@ -4,8 +4,7 @@ from xraspberry import config
 from xraspberry.rasplife.utils import generate_timestamp
 from xraspberry.rasplife.handlers.base import route, BaseHandler, user_auth,\
     admin_auth, MESSAGES, user_visit_auth, current_auth
-from xraspberry.rasplife.models.user import User
-from xraspberry.rasplife.models.post import Post
+from xraspberry.rasplife.models import User, Post, Todo
 from xraspberry.rasplife.db import db_session
 
 
@@ -76,6 +75,14 @@ class UserInfoHandler(BaseHandler):
 
     @admin_auth
     def delete(self, user_id, *args, **kwargs):
+        """
+        TODO 删除一个用户需要删除其 posts, todos, todo_items
+        TODO 都是软删除，即将deleted_at置为当前时间戳
+        :param user_id:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         query_user = User.find_by_id(user_id)
         if not query_user:
             return self.error(MESSAGES[404], status_code=404)
@@ -153,4 +160,20 @@ class UserTodosHandler(BaseHandler):
     @user_visit_auth
     @current_auth
     def get(self, user_id, *args, **kwargs):
-        pass
+        try:
+            page = int(self.get_argument("page", 1))
+            size = int(self.get_argument("size", 20))
+        except ValueError as e:
+            self.error(MESSAGES[400], status_code=400)
+
+        offset = (page - 1) * size
+        total, items = Todo.get_todo_by_user(user_id, limit=size, offset=offset, is_admin=self.is_admin())
+
+        ret = {
+            "total": total,
+            "items": items,
+            "page": page,
+            "size": size
+        }
+
+        self.data(ret)

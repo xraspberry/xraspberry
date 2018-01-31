@@ -60,10 +60,10 @@ class PostHandler(BaseHandler):
     @current_auth
     def put(self, post_id, *args, **kwargs):
         post = Post.find_post_by_id(post_id)
-        if post.user.id != self.current_user.id:
-            return self.error(MESSAGES[403], status_code=403)
         if not post:
             return self.error(MESSAGES[404], status_code=404)
+        if post.user.id != self.current_user.id:
+            return self.error(MESSAGES[403], status_code=403)
         data = self.get_json_body()
         post.title = data.get("title", "")
         post.content = data.get("content", "")
