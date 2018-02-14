@@ -5,6 +5,7 @@ rasplife:
   version: "0.0.1"
   debug: True
   http_port: 5000
+  data_key: "#hello-aes-hello-aes-hello-aes##"
   auth_config:
     app_id: "rasplife"
     secret_key: "the-winter-is-coming"

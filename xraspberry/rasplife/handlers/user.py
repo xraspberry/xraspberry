@@ -4,7 +4,9 @@ from xraspberry import config
 from xraspberry.rasplife.utils import generate_timestamp
 from xraspberry.rasplife.handlers.base import route, BaseHandler, user_auth,\
     admin_auth, MESSAGES, user_visit_auth, current_auth
-from xraspberry.rasplife.models import User, Post, Todo
+from xraspberry.rasplife.models.user import User
+from xraspberry.rasplife.models.post import Post
+from xraspberry.rasplife.models.todo import Todo
 from xraspberry.rasplife.db import db_session
 
 
